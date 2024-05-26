@@ -31,12 +31,16 @@ def handle_message(event):
 
     user_message = event.message.text
     reply_messages = search_and_extract_anser(all_data,user_message)
+    messages_to_reply = []
     for message in reply_messages:
-        if determine_content_type(message)=="Image":
-            line_bot_api.reply_message(event.reply_token, ImageSendMessage(original_content_url = message, preview_image_url= message ))
+        if determine_content_type(message) == "Image":
+            messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
         else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
+            messages_to_reply.append(TextSendMessage(text=message))
     
+    # 一次性回覆所有訊息
+    if messages_to_reply:
+        line_bot_api.reply_message(event.reply_token, messages_to_reply)
 
 # 定義一個函數來讀取JSON文件
 def read_json_file(file_path):
