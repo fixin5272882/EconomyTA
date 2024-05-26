@@ -67,13 +67,10 @@ def determine_content_type(url):
             # 判斷是否是文字類型
             elif content_type.startswith('text/'):
                 return "Text"
-            else:
-                return "Other"
-        else:
-            return "Unknown"
+        
     except requests.RequestException as e:
-        print(f"Error checking URL: {e}")
-        return "Error"
+        # print(f"Error checking URL: {e}")
+        return "Text"
 
 if __name__ == "__main__":
     app.run()
