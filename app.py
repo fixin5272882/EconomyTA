@@ -2,6 +2,10 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+import json
+import threading
+import concurrent.futures
+
 
 app = Flask(__name__)
 
@@ -20,19 +24,32 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    user_message = event.message.text
-    reply_message = generate_reply(user_message)
-    # reply_message = user_message
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
+    # 讀取三個JSON文件
+    file_paths = ['./Json/Ch1.json', './Json/Ch2.json', './Json/Other.json']
+    all_data = []
 
-def generate_reply(message):
-    # 在这里根据关键字生成回复消息的逻辑
-    if '教室' in message:
-        return '教室在123'
-    elif '考試' in message:
-        return '考試123'
-    else:
-        return '默认回复内容'
+    for file_path in file_paths:
+        all_data.extend(read_json_file(file_path))
+
+    user_message = event.message.text
+    reply_messages = search_and_extract_anser(all_data,user_message)
+    for message in reply_messages:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
+
+# 定義一個函數來讀取JSON文件
+def read_json_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+# 定義一個函數來搜尋關鍵詞並提取 'anser' 中的資料
+def search_and_extract_anser(data, message):
+    results = []
+    for item in data:
+        for item_key in item['keyword']:
+            if item_key in message:
+                results.extend(item['anser'])
+
+    return results
 
 if __name__ == "__main__":
     app.run()
