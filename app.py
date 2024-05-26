@@ -1,11 +1,9 @@
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage
 import json
-import threading
-import concurrent.futures
-
+import requests
 
 app = Flask(__name__)
 
@@ -34,7 +32,11 @@ def handle_message(event):
     user_message = event.message.text
     reply_messages = search_and_extract_anser(all_data,user_message)
     for message in reply_messages:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
+        if determine_content_type(message)=="Image":
+            line_bot_api.reply_message(event.reply_token, ImageSendMessage(original_content_url = message, preview_image_url= message ))
+        else:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
+    
 
 # 定義一個函數來讀取JSON文件
 def read_json_file(file_path):
@@ -50,6 +52,28 @@ def search_and_extract_anser(data, message):
                 results.extend(item['anser'])
 
     return results
+
+def determine_content_type(url):
+    try:
+        # 發送HEAD請求獲取響應頭部
+        response = requests.head(url, allow_redirects=True)
+        # 獲取Content-Type
+        content_type = response.headers.get('content-type')
+        
+        if content_type:
+            # 判斷是否是圖片類型
+            if content_type.startswith('image/'):
+                return "Image"
+            # 判斷是否是文字類型
+            elif content_type.startswith('text/'):
+                return "Text"
+            else:
+                return "Other"
+        else:
+            return "Unknown"
+    except requests.RequestException as e:
+        print(f"Error checking URL: {e}")
+        return "Error"
 
 if __name__ == "__main__":
     app.run()
