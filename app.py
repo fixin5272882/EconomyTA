@@ -52,13 +52,13 @@ def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-# 定義一個函數來搜尋關鍵詞並提取 'anser' 中的資料
+# 定義一個函數來搜尋關鍵詞並提取 'answer' 中的資料
 def search_and_extract_anser(data, message):
     results = []
     for item in data:
         for item_key in item['keyword']:
             if item_key in message:
-                results.extend(item['anser'])
+                results.extend(item['answer'])
 
     return results
 
