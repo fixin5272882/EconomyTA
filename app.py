@@ -26,16 +26,13 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    # 設定資料夾路徑
-    folder_path = './Json/'
-
-    # 讀取資料夾中的所有檔案名稱
-    file_names = os.listdir(folder_path)
-
-    # 過濾出檔案名稱（排除子資料夾），並加上完整路徑
-    file_paths = [os.path.join(folder_path, f) for f in file_names if os.path.isfile(os.path.join(folder_path, f))]
-    print(file_paths)
-    
+    # 讀取三個JSON文件
+    file_paths = ['./Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
+                  , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
+                  , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
+                  , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
+                  , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json', 
+                   './Json/Other.json', './Json/OtherData.json']
     all_data = []
 
     for file_path in file_paths:
@@ -65,13 +62,9 @@ def search_and_extract_anser(data, message):
     Best_similarity = 0
     for item in data:
         for item_key in item['keyword']:
-            print(item_key,end=': ')
             if item_key in message:
-                similarity = difflib.SequenceMatcher(None, item_key, message).ratio()
-                if similarity>Best_similarity:
-                    Best_similarity=similarity
-                    results=item['answer']
-                    
+                results.extend(item['answer'])
+
     return results
 
 def determine_content_type(url):
