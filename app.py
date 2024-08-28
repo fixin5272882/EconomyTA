@@ -4,11 +4,15 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage
 import json
 import requests
+import os
+import difflib
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('e0K5L5PfmBqS8cm4eZgTn4PWPGZz2mc97S8EwyPrJux4gpZcmfh6az83GAs4C04gzDI2Pc7xN6MjBysyMVZhsuZVjapY2ZBThddu6rbe4kbr/A58nW8vREVdtau2wjYIRgLYnCRxgsdgZnyS02unmgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('db3f5b159f43eb5f1526c1b43f835722')
+# Channel Access Token
+line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
+# Channel Secret
+handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -23,12 +27,12 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # 讀取三個JSON文件
-    file_paths = ['./Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
-                  , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
-                  , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
-                  , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
-                  , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json', 
-                   './Json/Other.json', './Json/OtherData.json']
+    file_paths = [ './Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
+                    , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
+                    , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
+                    , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
+                    , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json'
+                    , './Json/Other.json', './Json/OtherData.json']
     all_data = []
 
     for file_path in file_paths:
@@ -52,14 +56,17 @@ def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-# 定義一個函數來搜尋關鍵詞並提取 'answer' 中的資料
+# 定義一個函數來搜尋最接近的關鍵詞並提取 'answer' 中的資料
 def search_and_extract_anser(data, message):
     results = []
+    Best_similarity = 0
     for item in data:
         for item_key in item['keyword']:
-            if item_key in message:
-                results.extend(item['answer'])
-
+            similarity = difflib.SequenceMatcher(None, item_key, message).ratio()
+            if similarity>Best_similarity:
+                Best_similarity=similarity
+                results=item['answer']
+                    
     return results
 
 def determine_content_type(url):
