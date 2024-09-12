@@ -27,12 +27,12 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # 讀取三個JSON文件
-    file_paths = ['./Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
-                  , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
-                  , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
-                  , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
-                  , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json', 
-                   './Json/Other.json', './Json/OtherData.json']
+    file_paths = [ './Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
+                    , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
+                    , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
+                    , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
+                    , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json'
+                    , './Json/Other.json', './Json/OtherData.json']
     all_data = []
 
     for file_path in file_paths:
@@ -62,9 +62,11 @@ def search_and_extract_anser(data, message):
     Best_similarity = 0
     for item in data:
         for item_key in item['keyword']:
-            if item_key in message:
-                results.extend(item['answer'])
-
+            similarity = difflib.SequenceMatcher(None, item_key, message).ratio()
+            if similarity>Best_similarity:
+                Best_similarity=similarity
+                results=item['answer']
+                    
     return results
 
 def determine_content_type(url):
