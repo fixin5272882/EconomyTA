@@ -27,18 +27,22 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    messages_to_reply = []
     user_message = event.message.text
     chapters =  read_json_file("./Json/keyword.json")
-    similar_chapterPath = "./Json/"+similarity_chapter(chapters, user_message)+".json"
-    all_data = read_json_file(similar_chapterPath)
-    reply_messages = search_and_extract_anser(all_data,user_message)
-    
-    messages_to_reply = []
-    for message in reply_messages:
-        if determine_content_type(message) == "Image":
-            messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
-        else:
-            messages_to_reply.append(TextSendMessage(text=message))
+    similarityChapter = similarity_chapter(chapters, user_message)
+
+    if similarityChapter == "抱歉，找不到相關資訊，請換種方式詢問":
+        messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+    else:
+        similar_chapterPath = "./Json/"+similarityChapter+".json"
+        all_data = read_json_file(similar_chapterPath)
+        reply_messages = search_and_extract_anser(all_data,user_message) 
+        for message in reply_messages:
+            if determine_content_type(message) == "Image":
+                messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
+            else:
+                messages_to_reply.append(TextSendMessage(text=message))
     
     # 一次性回覆所有訊息
     if messages_to_reply:
@@ -78,7 +82,7 @@ def similarity_chapter(keywordData, target_message):
     similarity_results = find_similarities_across_chapters(keywordData, target_message)
 
     if not similarity_results or similarity_results[0][2] < 0.5:
-        return "抱歉、找不到相關資訊，請換種方式詢問"
+        return "抱歉，找不到相關資訊，請換種方式詢問"
     else:
         for chapter, keyword, similarity in similarity_results[:1]:  # 顯示前三名
             return chapter
