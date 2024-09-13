@@ -26,40 +26,30 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    data = read_json_file('./Json/keyword.json')
-    user_message = event.message.text
+    # 讀取三個JSON文件
+    file_paths = [ './Json/Ch1.json', './Json/Ch2.json', './Json/Ch3.json', './Json/Ch4.json', './Json/Ch5.json'
+                    , './Json/Ch6.json', './Json/Ch7.json', './Json/Ch8.json', './Json/Ch9.json', './Json/Ch10.json'
+                    , './Json/Ch11.json', './Json/Ch12.json', './Json/Ch13.json', './Json/Ch14.json', './Json/Ch15.json'
+                    , './Json/Ch16.json', './Json/Ch17.json', './Json/Ch18.json', './Json/Ch19.json', './Json/Ch20.json'
+                    , './Json/Ch21.json', './Json/Ch22.json', './Json/Ch23.json', './Json/Ch24.json'
+                    , './Json/Other.json', './Json/OtherData.json']
     all_data = []
-    related_chapters = find_related_chapters(user_message, data)
+
+    for file_path in file_paths:
+        all_data.extend(read_json_file(file_path))
+
+    user_message = event.message.text
+    reply_messages = search_and_extract_anser(all_data,user_message)
     messages_to_reply = []
-
-    if related_chapters == "抱歉、找不到相關資訊，請換種方式詢問":
-        messages_to_reply = related_chapters
-    else :
-        related_chapters = "./Json/"+related_chapters+".json"
-        messages_to_reply.append(related_chapters)
-        all_data.extend(read_json_file(related_chapters))
-        reply_messages = search_and_extract_anser(all_data,user_message)
-
-        for message in reply_messages:
-            if determine_content_type(message) == "Image":
-                messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
-            else:
-                messages_to_reply.append(TextSendMessage(text=message))
+    for message in reply_messages:
+        if determine_content_type(message) == "Image":
+            messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
+        else:
+            messages_to_reply.append(TextSendMessage(text=message))
     
     # 一次性回覆所有訊息
     if messages_to_reply:
         line_bot_api.reply_message(event.reply_token, messages_to_reply)
-
-# 搜尋內容在哪章節
-def find_related_chapters(message, data):
-    related_chapters = set()  # 使用 set 來避免重複
-    for chapter, keywords in data.items():
-        for keyword in keywords:
-            if keyword in message:  # 檢查 message 是否包含關鍵字
-                related_chapters.add(chapter)  # 加入相關章節名稱
-    if related_chapters==set():
-        related_chapters = ["抱歉、找不到相關資訊，請換種方式詢問"]
-    return list(related_chapters)[0]
 
 # 定義一個函數來讀取JSON文件
 def read_json_file(file_path):
@@ -95,7 +85,8 @@ def determine_content_type(url):
                 return "Text"
         
     except requests.RequestException as e:
-        return "ERROR"
+        # print(f"Error checking URL: {e}")
+        return "Text"
 
 if __name__ == "__main__":
     app.run()
