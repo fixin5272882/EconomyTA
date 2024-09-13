@@ -32,7 +32,8 @@ def handle_message(event):
     chapters =  read_json_file("./Json/keyword.json")
     similarityChapter = similarity_chapter(chapters, user_message)
 
-    if similarityChapter == "抱歉，找不到相關資訊，請換種方式詢問":
+    if  "None" in similarityChapter:
+        messages_to_reply.append(TextSendMessage(text="相似度"+similarityChapter[0]))
         messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
     else:
         similar_chapterPath = "./Json/"+similarityChapter+".json"
@@ -81,8 +82,8 @@ def find_similarities_across_chapters(chapters, target_message):
 def similarity_chapter(keywordData, target_message):
     similarity_results = find_similarities_across_chapters(keywordData, target_message)
 
-    if not similarity_results or similarity_results[0][2] < 0.5:
-        return "抱歉，找不到相關資訊，請換種方式詢問"
+    if not similarity_results or similarity_results[0][2] < 0.4:
+        return [str(similarity_results[0][2]),"None"]
     else:
         for chapter, keyword, similarity in similarity_results[:1]:  # 顯示前三名
             return chapter
