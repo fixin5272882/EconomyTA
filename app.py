@@ -30,26 +30,25 @@ def handle_message(event):
     messages_to_reply = []
     user_message = event.message.text
     keywords =  read_json_file("./Json/keyword.json")
-    
-    # 執行多執行緒搜尋
     matched_chapter = find_keywords_in_message(keywords, user_message)
+    messages_to_reply.append(TextSendMessage(text="章節分類至:"+matched_chapter))
 
     if matched_chapter != "None":
         chapterPath = "./Json/"+matched_chapter+".json"
         chapterData = read_json_file(chapterPath)
-        reply_messages = find_answer_with_similarity(chapterData, user_message, threshold=0.7)
+        reply_messages = find_answer_with_similarity(chapterData, user_message, threshold=0.76)
         if reply_messages == "None":
-            messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+            messages_to_reply.append(TextSendMessage(text="2_抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
         else:
-            messages_to_reply.append(TextSendMessage(text=str(reply_messages[0][0])))
+            messages_to_reply.append(TextSendMessage(text="相似度:"+reply_messages[0][0]))
             for message in reply_messages[0][2]:
                 if determine_content_type(message) == "Image":
                     messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
                 else:
                     messages_to_reply.append(TextSendMessage(text=message))
     else:
-        messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
-
+        messages_to_reply.append(TextSendMessage(text="1_抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+    
     # 一次性回覆所有訊息
     if messages_to_reply:
         line_bot_api.reply_message(event.reply_token, messages_to_reply)
@@ -65,7 +64,7 @@ def keyword_in_message(target_message, keyword):
 
 # 多執行緒搜尋關鍵字是否存在於字串
 def find_keywords_in_message(chapters, target_message):
-
+    results = "None"
     # 定義執行緒池
     with ThreadPoolExecutor() as executor:
         # 提交每個關鍵字的存在檢查任務到執行緒池
@@ -86,8 +85,6 @@ def find_keywords_in_message(chapters, target_message):
                 similarity = calculate_similarity(target_message,keyword)
                 if similarity > best_similarity:
                     results = chapter
-            else:
-                results = "None"
 
     return results
 
@@ -146,6 +143,3 @@ def determine_content_type(url):
         
     except requests.RequestException as e:
         return e
-
-if __name__ == "__main__":
-    app.run()
