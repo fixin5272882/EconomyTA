@@ -29,22 +29,23 @@ def callback():
 def handle_message(event):
     messages_to_reply = []
     user_message = event.message.text
-    chapters =  read_json_file("./Json/keyword.json")
-    similarityChapter = similarity_chapter(chapters, user_message)
+    keywords =  read_json_file("./Json/keyword.json")
+    
+    # 執行多執行緒搜尋
+    matched_chapter = find_keywords_in_message(keywords, user_message)
 
-    if  "None" in similarityChapter:
-        messages_to_reply.append(TextSendMessage(text="相似度"+similarityChapter[0]))
-        messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
-    else:
-        similar_chapterPath = "./Json/"+similarityChapter+".json"
-        all_data = read_json_file(similar_chapterPath)
-        reply_messages = search_and_extract_anser(all_data,user_message) 
+    if matched_chapter != "None":
+        chapterPath = "./Json/"+matched_chapter+".json"
+        chapterData = read_json_file(chapterPath)
+        reply_messages = search_and_extract_anser(chapterData,user_message) 
         for message in reply_messages:
             if determine_content_type(message) == "Image":
                 messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
             else:
                 messages_to_reply.append(TextSendMessage(text=message))
-    
+    else:
+        messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+
     # 一次性回覆所有訊息
     if messages_to_reply:
         line_bot_api.reply_message(event.reply_token, messages_to_reply)
@@ -54,39 +55,37 @@ def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-# 多執行緒的比對函數
-def find_similarities_across_chapters(chapters, target_message):
-    similarities = []
+# 檢查關鍵字是否存在於目標字串中的函數
+def keyword_in_message(target_message, keyword):
+    return keyword in target_message
+
+# 多執行緒搜尋關鍵字是否存在於字串
+def find_keywords_in_message(chapters, target_message):
 
     # 定義執行緒池
     with ThreadPoolExecutor() as executor:
-        # 將每個章節及關鍵字的相似度計算任務提交到執行緒池
+        # 提交每個關鍵字的存在檢查任務到執行緒池
         future_to_chapter = {
-            executor.submit(calculate_string_similarity, target_message, keyword): (chapter, keyword)
+            executor.submit(keyword_in_message, target_message, keyword): (chapter, keyword)
             for chapter, keywords in chapters.items()
             for keyword in keywords
         }
 
         # 收集結果
         for future in as_completed(future_to_chapter):
+            best_similarity = 0
             chapter, keyword = future_to_chapter[future]
-            similarity = future.result()
-            similarities.append((chapter, keyword, similarity))
+            exists = future.result()  # 結果為 True 或 False
 
-    # 根據相似度排序，從高到低
-    similarities.sort(key=lambda x: x[2], reverse=True)
+            # 如果關鍵字存在於目標訊息中，則將其添加到結果中
+            if exists:
+                similarity = calculate_string_similarity(target_message,keyword)
+                if similarity > best_similarity:
+                    results = chapter
+            else:
+                results = "None"
 
-    return similarities
-
-# 獲得最相近的關鍵字
-def similarity_chapter(keywordData, target_message):
-    similarity_results = find_similarities_across_chapters(keywordData, target_message)
-
-    if not similarity_results or similarity_results[0][2] < 0.4:
-        return [str(similarity_results[0][2]),"None"]
-    else:
-        for chapter, keyword, similarity in similarity_results[:1]:  # 顯示前三名
-            return chapter
+    return results
 
 # 定義函數來計算兩個字串之間的相似度
 def calculate_string_similarity(str1, str2):
