@@ -1,15 +1,5 @@
 [
     {
-      "title": "價格上限",
-      "keyword": ["價格上限","價格上限是什麼","價格上限意思","價格上限解釋"],
-      "answer": ["政府或集體價格管制或限制價格的方式，限制某一商品的價格不得高於價格上限，一個有效的價格上限需小於均衡價格","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*QZ6hssSyoRSCKonZUSngmQ.png","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*rCMkWGj6GcDWhouaMgJ1bA.png","在不受管制的60元價格上限高於50元均衡價格的水準下，市場供需仍能達到均衡，而在受管制下的40元低於50元均衡價格的水準下，在市場價格40元時，需求量為8顆，但供給量只有5顆，就會造成3顆的短缺"]
-    },
-    {
-      "title": "價格下限",
-      "keyword": ["價格下限","價格下限是什麼","價格下限意思","價格下限解釋"],
-      "answer": ["指政府或集體價格管制或限制價格的方式，限制某一商品的價格需高於價格下限，一個有效的價格下限需大於均衡價格","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*YI-7gbCFmatWCBrePm2FEQ.png","https://miro.medium.com/v2/resize:fit:750/format:webp/1*QmxQ_xmDyFahGUJduOXnhA.png","在不受管制的40元價格下限低於50元均衡價格的水準下，市場供需仍能達到均衡，而在受管制下的60元高於50元均衡價格的水準下，在市場價格60元時，供給量為9顆，但需求量只需6顆，就會造成3顆的剩餘"]
-    },
-    {
        "title": "稅負歸屬",
         "keyword": ["稅負歸屬","稅負歸屬是什麼","稅負歸屬意思","稅負歸屬解釋"],
         "answer": ["指最終誰來承擔稅收負擔的經濟概念，稅負歸屬分析的是一項稅收政策後實施，其經濟影響如何在消費者和生產者之間分配 \n 其中有分為法定歸屬和經濟歸屬兩者 \n ex:消費稅、薪資稅"]
