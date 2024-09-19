@@ -2,11 +2,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageSendMessage, QuickReply, QuickReplyButton, MessageAction
 import json
 import requests
 import os
 import difflib
+import gspread
+from google.oauth2.service_account import Credentials
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -14,6 +17,23 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
+
+worksheet = None
+
+# 建立 Google Sheets 連接，只執行一次
+def init_google_sheets():
+    global worksheet
+    # Google Sheets 連接設定
+    #給憑證
+    SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+    # 加載憑證
+    creds = Credentials.from_service_account_file("/opt/render/project/src/phrasal-truck-426318-a6-1afe736b2cee.json", scopes=SCOPES)
+    # 連接到 Google Sheets
+    gc = gspread.authorize(creds)
+    sh  = gc.open_by_url(os.getenv('SHEET_URL'))
+    worksheet = sh.sheet1  # 第一個工作表
+
+init_google_sheets()
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -29,6 +49,10 @@ def callback():
 def handle_message(event):
     messages_to_reply = []
     user_message = event.message.text
+    user_Id  = event.source.user_id
+    profile = line_bot_api.get_profile(user_Id)
+    user_name = profile["displayName"]
+
     keywords =  read_json_file("./Json/keyword.json")
     matched_chapter = find_keywords_in_message(keywords, user_message)
     messages_to_reply.append(TextSendMessage(text="章節分類至:"+matched_chapter))
@@ -39,6 +63,7 @@ def handle_message(event):
         reply_messages = find_answer_with_similarity(chapterData, user_message, threshold=0.76)
         if reply_messages == "None":
             messages_to_reply.append(TextSendMessage(text="2_抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+            add_question_insheet(user_Id,user_name,user_message)
         else:
             messages_to_reply.append(TextSendMessage(text="相似度:"+reply_messages[0][0]))
             for message in reply_messages[0][2]:
@@ -48,6 +73,7 @@ def handle_message(event):
                     messages_to_reply.append(TextSendMessage(text=message))
     else:
         messages_to_reply.append(TextSendMessage(text="1_抱歉、找不到相關資訊，請先詢問其他問題～後續會再持續更新"))
+        add_question_insheet(user_Id,user_name,user_message)
     
     # 一次性回覆所有訊息
     if messages_to_reply:
@@ -124,6 +150,14 @@ def find_answer_with_similarity(entries, target_message, threshold):
         if results == []: return "None"
         else : results = sorted(results, key=lambda x: x[0], reverse=True)
     return results
+
+#判斷是否有一樣的問題並放入 googlesheet
+def add_question_insheet(user_Id,user_name,question):
+    questions = worksheet.col_values(4)
+    if question not in questions:
+        time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        new_row = [time,user_Id,user_name,question]
+        worksheet.append_row(new_row)
 
 #判斷回應問題的類型
 def determine_content_type(url):
