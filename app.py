@@ -1,14 +1,22 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Thread
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage
+from clock import scheduled_job  # 引入 clock.py 的定時任務
 import json
 import requests
 import os
 import difflib
 
 app = Flask(__name__)
+
+if __name__ == "__main__":
+    # 使用執行緒來運行定時任務
+    thread = Thread(target=scheduled_job)
+    thread.start()
+    app.run()
 
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
