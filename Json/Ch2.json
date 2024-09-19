@@ -238,5 +238,10 @@
     "title": "要怎麼解讀供需曲線",
     "keyword": ["要怎麼解讀供需曲線","要怎麼解讀供需曲線是什麼","如何解讀供需曲線"],
     "answer": ["需求增加： 需求曲線向右移動，均衡價格和數量都會增加 \n 需求減少： 需求曲線向左移動，均衡價格和數量都會減少 \n 供給增加： 供給曲線向右移動，均衡價格下降，均衡數量增加 \n 供給減少： 供給曲線向左移動，均衡價格上升，均衡數量減少"]
+  },
+  { 
+      "title": "供需法則",
+      "keyword": ["供需法則","供需法則是什麼","供需法則意思"],
+      "answer": ["在其他條件不變的情況下，商品價格與供給量、需求量之間的關係","https://miro.medium.com/v2/resize:fit:828/format:webp/1*OpOqxQDKBbEDWVsegG83aw.png","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*CnXCGo0LrfA7A7kXeD36cQ.png"]
   }
 ]
