@@ -16,8 +16,7 @@ if __name__ == "__main__":
     # 使用執行緒來運行定時任務
     thread = Thread(target=scheduled_job)
     thread.start()
-    app.run()
-
+    
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
