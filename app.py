@@ -40,24 +40,8 @@ def handle_message(event):
 
     if user_message == "測試開始":
         test_mode = True  # 開始測試，設置為 True
-        quick_reply_buttons = QuickReply(
-            items=[
-                QuickReplyButton(
-                    action=MessageAction(label="選項 1", text="你選擇了選項 1")
-                ),
-                QuickReplyButton(
-                    action=MessageAction(label="選項 2", text="你選擇了選項 2")
-                ),
-                QuickReplyButton(
-                    action=MessageAction(label="選項 3", text="你選擇了選項 3")
-                )
-            ]
-        )
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="測試開始，請選擇一個選項:", quick_reply=quick_reply_buttons)
-        )
-
+        Reply_Modle(event)
+        
     elif user_message == "測試結束":
         test_mode = False  # 結束測試，設置為 False
         line_bot_api.reply_message(
@@ -68,7 +52,16 @@ def handle_message(event):
     else:
         # 如果在測試模式中，則每次訊息都顯示 Quick Reply 按鈕
         if test_mode:
-            quick_reply_buttons = QuickReply(
+            Reply_Modle(event)
+        else:
+            # 如果不在測試模式中，則只是回覆訊息
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=f"你傳送了：{user_message}")
+            )
+
+def Reply_Modle(event):
+    quick_reply_buttons = QuickReply(
                 items=[
                     QuickReplyButton(
                         action=MessageAction(label="選項 1", text="你選擇了選項 1")
@@ -84,14 +77,7 @@ def handle_message(event):
                     )
                 ]
             )
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=f"你傳送了：{user_message}", quick_reply=quick_reply_buttons)
-            )
-        else:
-            # 如果不在測試模式中，則只是回覆訊息
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=f"你傳送了：{user_message}")
-            )
-
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="測試開始，請選擇一個選項:", quick_reply=quick_reply_buttons)
+    )
