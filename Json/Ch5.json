@@ -1,35 +1,5 @@
 [
     {
-      "title": "需求價格彈性",
-      "keyword": ["需求價格彈性","需求價格彈性是什麼","需求價格彈性意思"],
-      "answer": ["指的是價格改變時需求量的變動幅度 \n 價格改變使需求量大幅變動=需求有彈性(彈性>1) \n 價格改變使需求量微幅變動=需求無彈性(彈性<1) \n 彈性=1又稱單位彈性 \n ex: 必需品、奢侈品、替代品","https://miro.medium.com/v2/resize:fit:640/format:webp/1*QgylBkQKWUdepYhmHRL27w.png"]
-    },
-    {
-      "title": "需求完全無彈性",
-      "keyword": ["需求完全無彈性","需求完全無彈性是什麼","需求完全無彈性意思"],
-      "answer": ["無論價格如何變化，需求量都會保持不變 \n ex: 水、無替代品商品","https://miro.medium.com/v2/resize:fit:720/format:webp/1*ClgEM6IbF4dm1eMAFq5ugQ.png"]
-    },
-    {
-        "title": "需求無彈性",
-        "keyword": ["需求無彈性","需求無彈性是什麼","需求無彈性意思","需求缺乏彈性"],
-        "answer": ["當價格變化時，需求量不會發生太大的變化，需求曲線的斜率很小。","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*8YVmrzytdpWxvmMZGTaPlw.png"]
-    },
-    {
-        "title": "需求為單位彈性",
-        "keyword": ["需求為單位彈性","需求為單位彈性是什麼","需求為單位彈性意思","需求單位彈性","單位彈性","需求單一彈性"],
-        "answer": ["當價格變化 1% 時，需求量也會變化 1%","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*tC7fmFO3FhOXIUEvPmbcxg.png"]
-    },
-    {
-        "title": "需求有彈性",
-        "keyword": ["需求有彈性","需求有彈性是什麼","需求有彈性意思","需求富有彈性"],
-        "answer": ["當價格變化 1% 時，需求量會變化大於 1%","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*4lMgJmgGQ59yB4325kh1nQ.png"]
-    },
-    {
-        "title": "需求完全有彈性",
-        "keyword": ["需求完全有彈性","需求完全有彈性是什麼","需求完全有彈性意思","需求完全彈性"],
-        "answer": ["即使價格發生微小的變化，需求量也會發生很大的變化，需求完全有彈性的情況下，需求曲線是一條水平線","https://miro.medium.com/v2/resize:fit:786/format:webp/1*_d6oVTJuRalvQHw95xAQGg.png"]
-    },
-    {
         "title": "總收益",
         "keyword": ["總收益","總收益是什麼","總收益意思"],
         "answer": ["銷售產品或服務所獲得的全部貨幣收入，它是價格與銷量的乘積","https://miro.medium.com/v2/resize:fit:828/format:webp/1*BcnqRMOSCos1tg4UpLC3iQ.png"]
@@ -43,46 +13,6 @@
         "title": "無形的商品",
         "keyword": ["無形的商品","無形的商品是什麼","無形的商品意思","無形的商品解釋"],
         "answer": ["無形的商品是指不能觸摸或感知的商品 \n ex: 服務、勞務、創意、想法"]
-    },
-    {
-        "title": "需求的所得彈性",
-        "keyword": ["需求的所得彈性","需求的所得彈性是什麼","需求的所得彈性意思"],
-        "answer": ["衡量需求量對於消費者所得變化的敏感程度 \n ex:消費者所得變化對需求量的影響、不同商品的需求所得彈性比較、政府政策對需求量的影響","https://miro.medium.com/v2/resize:fit:720/format:webp/1*DLSeknWB7ghPz208ZTjYew.png"]
-    },
-    {
-        "title": " 需求的交叉價格彈性",
-        "keyword": [" 需求的交叉價格彈性"," 需求的交叉價格彈性是什麼"," 需求的交叉價格彈性意思"],
-        "answer": ["指某種商品的價格變動對另一種商品需求量變化的反應程度 \n ex:替代品與互補品的關係","https://miro.medium.com/v2/resize:fit:828/format:webp/1*BRxJ_5V_RLE0o3TF7DQWKg.png"]
-    },
-    {
-        "title": "供給價格彈性",
-        "keyword": ["供給價格彈性","供給價格彈性是什麼","供給價格彈性意思"],
-        "answer": ["指供給量對於商品價格變化的反應程度","https://miro.medium.com/v2/resize:fit:720/format:webp/1*v7H4QKOc7k7hC2PbpBHqRg.png","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*2ZQW4U1EU7PB8thUUD5qPg.png"]
-    },
-    {
-        "title": "供給完全無彈性",
-        "keyword": ["供給完全無彈性","供給完全無彈性是什麼","供給完全無彈性意思"],
-        "answer": ["指供給量不受價格變動影響的極端情況，在這種情況下，無論價格如何變動，供給量都會保持不變","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*bY8VYgj-ptQABGvuOpCPOA.png"]
-    },
-    {
-        "title": "供給無彈性",
-        "keyword": ["供給無彈性","供給無彈性是什麼","供給無彈性意思","供給缺乏彈性"],
-        "answer": ["指供給量對價格變化的反應較小，在這種情況下，價格變動對供給量的影響較小","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*nmZn1rhQy5EDQItdHI4Hew.png"]
-    },
-    {
-        "title": "供給為單位彈性",
-        "keyword": ["供給為單位彈性","供給為單位彈性是什麼","供給為單位彈性意思","供給單位彈性","供給單位彈性是什麼"," 供給單位彈性意思","供給單位彈性解釋","供給為單位彈性解釋","供給單一彈性"],
-        "answer": ["指供給量對價格變化的反應程度與價格變動程度相同，在這種情況下，價格變動 1%，供給量也會變動 1%","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*T-X2WB0mQDZCKHRlS4FPyA.png"]
-    },
-    {
-        "title": "供給有彈性",
-        "keyword": ["供給有彈性","供給有彈性是什麼","供給有彈性意思","供給有彈性解釋","供給富有彈性"],
-        "answer": ["指供給量對價格變化的反應較大，在這種情況下，價格變動 1%，供給量也會變動大於 1%","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*Hm9dUfiJ8NRjy270bpnGWQ.png"]
-    },
-    {
-        "title": "供給完全有彈性",
-        "keyword": ["供給完全有彈性","供給完全有彈性是什麼","供給完全有彈性意思","供給完全有彈性解釋","供給完全彈性"],
-        "answer": ["供給量對價格變化的反應無限大，在這種情況下，價格發生任何微小的變動，都會導致供給量發生無限大的變動","https://miro.medium.com/v2/resize:fit:1100/format:webp/1*XqH2ZErCM5CsepB-iceW4w.png"]
     },
     {
         "title": "中點法",
