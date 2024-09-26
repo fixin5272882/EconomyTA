@@ -31,7 +31,7 @@ def handle_message(event):
     user_message = event.message.text
     keywords =  read_json_file("./Json/keyword.json")
     matched_chapter = find_keywords_in_message(keywords, user_message)
-
+    messages_to_reply.append(TextSendMessage(text="章節分類"+matched_chapter))
     if matched_chapter != "None":
         chapterPath = "./Json/"+matched_chapter+".json"
         chapterData = read_json_file(chapterPath)
@@ -39,6 +39,7 @@ def handle_message(event):
         if reply_messages == "None":
             messages_to_reply.append(TextSendMessage(text="2_抱歉、找不到相關資訊，請換種方式詢問或問其他問題～後續會再持續更新"))
         else:
+            messages_to_reply.append(TextSendMessage(text="相似度"+str(reply_messages[0][0])))
             for message in reply_messages[0][2]:
                 if determine_content_type(message) == "Image":
                     messages_to_reply.append(ImageSendMessage(original_content_url=message, preview_image_url=message))
