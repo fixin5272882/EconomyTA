@@ -3,6 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage
 import json, os
+import CRU_googlesheet as Gsheet
 import ReplyMessage as RM
 
 app = Flask(__name__)
@@ -29,11 +30,14 @@ def handle_message(event):
     keywords =  read_json_file("./Json/keyword.json")
     matched_chapter = RM.find_keywords_in_message(keywords, user_message)
     messages_to_reply.append(TextSendMessage(text="章節分類"+matched_chapter))
+    worksheet = Gsheet.connect_google_sheets().sheet1
+
     if matched_chapter != "None":
         chapterPath = "./Json/"+matched_chapter+".json"
         chapterData = read_json_file(chapterPath)
         reply_messages = RM.find_answer_with_similarity(chapterData, user_message, threshold=0.76)
         if reply_messages == "None":
+            Gsheet.add_question_insheet(line_bot_api,event,matched_chapter,user_message,worksheet)
             messages_to_reply.append(TextSendMessage(text="2_抱歉、找不到相關資訊，請換種方式詢問或問其他問題～後續會再持續更新"))
         else:
             messages_to_reply.append(TextSendMessage(text="相似度"+str(reply_messages[0][0])))
@@ -43,6 +47,7 @@ def handle_message(event):
                 else:
                     messages_to_reply.append(TextSendMessage(text=message))
     else:
+        Gsheet.add_question_insheet(line_bot_api,event,matched_chapter,user_message,worksheet)
         messages_to_reply.append(TextSendMessage(text="1_抱歉、找不到相關資訊，請換種方式詢問或問其他問題～後續會再持續更新"))
     
     # 一次性回覆所有訊息

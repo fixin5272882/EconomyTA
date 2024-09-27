@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import os
 
 # 建立 Google Sheets 連接
@@ -16,12 +16,12 @@ def connect_google_sheets():
     return sh
 
 # 新增無法回答的問題進入google sheet
-def add_question_insheet(line_bot_api,event,question,worksheet):
+def add_question_insheet(line_bot_api,event,chapter,question,worksheet):
     user_Id  = event.source.user_id
     profile = line_bot_api.get_profile(user_Id)
     user_name = profile.display_name
-    questions = worksheet.col_values(4)
+    questions = worksheet.col_values(5)
     if question not in questions:
-        time = datetime.now().strftime("%Y-%m-%d %H:%M")
-        new_row = [time,user_Id,user_name,question]
+        time = datetime.now().astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M")
+        new_row = [time,user_Id,user_name,chapter,question]
         worksheet.append_row(new_row)
