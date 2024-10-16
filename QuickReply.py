@@ -1,5 +1,21 @@
 from linebot.models import TextSendMessage, QuickReply, QuickReplyButton, MessageAction
 
+def QReply_Start(event,line_bot_api):
+    quick_reply_buttons = QuickReply(
+                items=[
+                    QuickReplyButton(
+                        action=MessageAction(label="操作介紹", text="操作介紹")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="練習模式", text="練習模式")
+                    )
+                ]
+            )
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(quick_reply=quick_reply_buttons)
+    )
+
 def QReply_Chapter(event,line_bot_api):
     quick_reply_buttons = QuickReply(
                 items=[
@@ -66,24 +82,5 @@ def QReply_AnserButton(event,line_bot_api):
             )
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="請選擇想要練習題目數量:", quick_reply=quick_reply_buttons)
-    )
-
-def QReply_Start(event,line_bot_api):
-    quick_reply_buttons = QuickReply(
-                items=[
-                    QuickReplyButton(
-                        action=MessageAction(label="測試設定", text="測試設定")
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label="開始測試", text="開始測試")
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label="停止測試", text="測試結束")
-                    )
-                ]
-            )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="1", quick_reply=quick_reply_buttons)
+        TextSendMessage(text="請選擇答案:", quick_reply=quick_reply_buttons)
     )
