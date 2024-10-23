@@ -1,6 +1,19 @@
 from linebot.models import TextSendMessage, QuickReply, QuickReplyButton, MessageAction
 
-def QReply_Chapter(event,line_bot_api):
+def QReply_Start():
+    quick_reply_buttons = QuickReply(
+                items=[
+                    QuickReplyButton(
+                        action=MessageAction(label="操作介紹", text="操作介紹")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="練習模式", text="練習模式")
+                    )
+                ]
+            )
+    return quick_reply_buttons
+
+def QReply_Chapter():
     quick_reply_buttons = QuickReply(
                 items=[
                     QuickReplyButton(
@@ -13,16 +26,21 @@ def QReply_Chapter(event,line_bot_api):
                         action=MessageAction(label="Ch3", text="Ch3")
                     ),
                     QuickReplyButton(
+                        action=MessageAction(label="Ch4", text="Ch4")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="期中(ch1-ch4)", text="期中複習")
+                    ),
+                    QuickReplyButton(
                         action=MessageAction(label="停止測試", text="測試結束")
                     )
                 ]
             )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="請先選擇想要練習的章節:", quick_reply=quick_reply_buttons)
-    )
+    message_text = "請先選擇想要練習的章節："
+    current_state = "choose_section"
+    return quick_reply_buttons,message_text,current_state
 
-def QReply_QuestionNumber(event,line_bot_api):
+def QReply_QuestionNumber():
     quick_reply_buttons = QuickReply(
                 items=[
                     QuickReplyButton(
@@ -39,12 +57,11 @@ def QReply_QuestionNumber(event,line_bot_api):
                     )
                 ]
             )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="請選擇想要練習題目數量:", quick_reply=quick_reply_buttons)
-    )
+    message_text = "請先選擇想要練習的題數："
+    current_state = "choose_question_count"
+    return quick_reply_buttons,message_text,current_state
 
-def QReply_AnserButton(event,line_bot_api):
+def QReply_AnserButton():
     quick_reply_buttons = QuickReply(
                 items=[
                     QuickReplyButton(
@@ -64,26 +81,6 @@ def QReply_AnserButton(event,line_bot_api):
                     )
                 ]
             )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="請選擇想要練習題目數量:", quick_reply=quick_reply_buttons)
-    )
-
-def QReply_Start(event,line_bot_api):
-    quick_reply_buttons = QuickReply(
-                items=[
-                    QuickReplyButton(
-                        action=MessageAction(label="測試設定", text="測試設定")
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label="開始測試", text="開始測試")
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label="停止測試", text="測試結束")
-                    )
-                ]
-            )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="1", quick_reply=quick_reply_buttons)
-    )
+    message_text = "請選擇答案:"
+    current_state = "testing"
+    return quick_reply_buttons,message_text,current_state
