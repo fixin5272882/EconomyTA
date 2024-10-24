@@ -8,7 +8,6 @@ def keyword_in_message(target_message, keyword):
 # 多執行緒搜尋關鍵字是否存在於字串
 def find_keywords_in_message(chapters, target_message):
     results = "None"
-    keyword_S = "None"
     # 定義執行緒池
     with ThreadPoolExecutor() as executor:
         # 提交每個關鍵字的存在檢查任務到執行緒池
@@ -26,12 +25,11 @@ def find_keywords_in_message(chapters, target_message):
 
             # 如果關鍵字存在於目標訊息中，則將其添加到結果中
             if exists:
-                keyword_S = keyword
                 similarity = calculate_similarity(target_message,keyword)
                 if similarity > best_similarity:
                     results = chapter
 
-    return keyword_S,results
+    return results
 
 # 定義函數來計算兩個字串之間的相似度
 def calculate_similarity(str1, str2):

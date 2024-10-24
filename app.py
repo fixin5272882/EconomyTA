@@ -28,7 +28,7 @@ def handle_message(event):
     messages_to_reply = []
     user_message = event.message.text
     keywords =  read_json_file("./Json/keyword.json")
-    keyword_S,matched_chapter = RM.find_keywords_in_message(keywords, user_message)
+    matched_chapter = RM.find_keywords_in_message(keywords, user_message)
     worksheet = Gsheet.connect_google_sheets().sheet1
 
     if matched_chapter != "None":
@@ -45,7 +45,7 @@ def handle_message(event):
                 else:
                     messages_to_reply.append(TextSendMessage(text=message))
     else:
-        Gsheet.add_question_insheet(line_bot_api,event,matched_chapter,keyword_S,user_message,worksheet)
+        Gsheet.add_question_insheet(line_bot_api,event,matched_chapter,user_message,worksheet)
         messages_to_reply.append(TextSendMessage(text="抱歉、找不到相關資訊，請換種方式詢問或問其他問題～後續會再持續更新"))
     
     # 一次性回覆所有訊息
@@ -56,4 +56,3 @@ def handle_message(event):
 def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
-
