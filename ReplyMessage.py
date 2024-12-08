@@ -86,3 +86,7 @@ def determine_content_type(url):
         
     except requests.RequestException as e:
         return e
+    
+#linebot+quickReply回應
+# def reply_message(token,message,Qbutton):
+    
